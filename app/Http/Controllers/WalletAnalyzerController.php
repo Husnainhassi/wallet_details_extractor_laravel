@@ -2,12 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\WalletsImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Facades\Excel;
 
 class WalletAnalyzerController extends Controller
 {
     public function index() {
+        $response = Http::withHeaders([
+            'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0 Safari/537.36',
+            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+            'Accept-Language' => 'en-US,en;q=0.5',
+            'Connection' => 'keep-alive'
+        ])->get("https://gmgn.ai/sol/address/Ew3k9YtS63gV29XhWdpKcXN93m9j3MSehyxxXUg9tp7r");
+        dd($response->body());
         return view('wallet.analyze');
     }
 
@@ -18,24 +27,20 @@ class WalletAnalyzerController extends Controller
 
         // Store file
         $file = $request->file('csv_file');
-        $path = $file->store('csv_files');
 
-        // Process CSV
-        $wallets = [];
-        if (($handle = fopen(storage_path('app/' . $path), 'r')) !== FALSE) {
-            while (($data = fgetcsv($handle)) !== FALSE) {
-                $wallets[] = $data[0]; // Assuming wallet addresses are in first column
-            }
-            fclose($handle);
-        }
+        $import = new WalletsImport();
+        Excel::import($import, $file);
+
+        $wallets = $import->getWallets();
         dd($wallets);
+
+        $wallets[] = Excel::import(new WalletsImport(),$file);
 
         // Analyze wallets
         $qualifiedWallets = [];
         foreach ($wallets as $wallet) {
             $response = Http::get("https://gmgn.ai/sol/address/{$wallet}");
-            
-            // Parse response (you'll need to inspect actual API response structure)
+
             $roi = $this->extractROI($response->body());
             $winrate = $this->extractWinrate($response->body());
 

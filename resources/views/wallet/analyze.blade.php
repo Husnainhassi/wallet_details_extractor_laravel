@@ -9,7 +9,7 @@
     <div class="min-h-screen flex items-center justify-center">
       <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-2xl">
         <h1 class="text-2xl font-bold text-center mb-6">Wallet Analyzer</h1>
-        <form method="POST" action="{{ route('analyze') }}" enctype="multipart/form-data" class="space-y-4">
+        <form method="POST" action="{{ route('analyze.post') }}" enctype="multipart/form-data" class="space-y-4">
           @csrf
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Upload Excel File</label>

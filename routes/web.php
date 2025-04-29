@@ -9,4 +9,4 @@ Route::get('/', function () {
 });
 
 Route::get('/analyze', [WalletAnalyzerController::class, 'index'])->name('analyze');
-Route::post('/analyze', [WalletAnalyzerController::class, 'analyze']);
+Route::post('/analyze', [WalletAnalyzerController::class, 'analyze'])->name('analyze.post');
