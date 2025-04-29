@@ -13,7 +13,7 @@ class WalletAnalyzerController extends Controller
 
     public function analyze(Request $request) {
         $request->validate([
-            'csv_file' => 'required|file|mimes:csv,txt'
+            'csv_file' => 'required|file|mimes:csv,txt,xlsx',
         ]);
 
         // Store file
@@ -28,6 +28,7 @@ class WalletAnalyzerController extends Controller
             }
             fclose($handle);
         }
+        dd($wallets);
 
         // Analyze wallets
         $qualifiedWallets = [];
