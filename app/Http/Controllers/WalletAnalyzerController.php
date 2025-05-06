@@ -26,7 +26,7 @@ class WalletAnalyzerController extends Controller
         }
 
         // Always exclude negative ROI values
-        $query->where('ROI', '>=', 0);
+        // $query->where('ROI', '>=', 0);
         // dd($query->toSql(), $query->getBindings());
         // Get paginated results
         $wallets = $query->paginate(10);
