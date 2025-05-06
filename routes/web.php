@@ -8,5 +8,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/analyze', [WalletAnalyzerController::class, 'index'])->name('analyze');
-Route::post('/analyze', [WalletAnalyzerController::class, 'analyze'])->name('analyze.post');
+Route::get('/wallet-list', [WalletAnalyzerController::class, 'walletList'])->name('wallet_list');

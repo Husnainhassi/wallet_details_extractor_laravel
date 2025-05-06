@@ -6,66 +6,35 @@ use App\Imports\WalletsImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Models\WalletData;
 
 class WalletAnalyzerController extends Controller
 {
-    public function index() {
-        $response = Http::withHeaders([
-            'User-Agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/122.0 Safari/537.36',
-            'Accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language' => 'en-US,en;q=0.5',
-            'Connection' => 'keep-alive'
-        ])->get("https://gmgn.ai/sol/address/Ew3k9YtS63gV29XhWdpKcXN93m9j3MSehyxxXUg9tp7r");
-        dd($response->body());
-        return view('wallet.analyze');
-    }
+   
+    public function walletList(Request $request) 
+    {
+        $query = WalletData::query();
 
-    public function analyze(Request $request) {
-        $request->validate([
-            'csv_file' => 'required|file|mimes:csv,txt,xlsx',
-        ]);
-
-        // Store file
-        $file = $request->file('csv_file');
-
-        $import = new WalletsImport();
-        Excel::import($import, $file);
-
-        $wallets = $import->getWallets();
-        dd($wallets);
-
-        $wallets[] = Excel::import(new WalletsImport(),$file);
-
-        // Analyze wallets
-        $qualifiedWallets = [];
-        foreach ($wallets as $wallet) {
-            $response = Http::get("https://gmgn.ai/sol/address/{$wallet}");
-
-            $roi = $this->extractROI($response->body());
-            $winrate = $this->extractWinrate($response->body());
-
-            if ($roi >= 30 && $winrate >= 60) {
-                $qualifiedWallets[] = [
-                    'address' => $wallet,
-                    'roi' => $roi,
-                    'winrate' => $winrate
-                ];
-            }
+        // Apply Winrate filter if provided
+        if ($request->filled('winrate_min') && is_numeric($request->winrate_min)) {
+            $query->where('Winrate', '>=', (float)$request->winrate_min);
         }
 
-        return view('results', ['wallets' => $qualifiedWallets]);
+        // Apply ROI filter if provided
+        if ($request->filled('roi_min') && is_numeric($request->roi_min)) {
+            $query->where('ROI', '>=', (float)$request->roi_min);
+        }
+
+        // Always exclude negative ROI values
+        $query->where('ROI', '>=', 0);
+        // dd($query->toSql(), $query->getBindings());
+        // Get paginated results
+        $wallets = $query->paginate(10);
+        
+        return view('wallet.results', [
+            'wallets' => $wallets,
+            'filter' => $request->all() // Pass all filters back to view
+        ]);
     }
 
-    private function extractROI($html) {
-        // Implement actual parsing logic based on GMGN's HTML structure
-        // Example using regex (adjust according to actual content):
-        preg_match('/ROI:\s*([\d.]+)%/', $html, $matches);
-        return $matches[1] ?? 0;
-    }
-
-    private function extractWinrate($html) {
-        // Implement actual parsing logic
-        preg_match('/Win Rate:\s*([\d.]+)%/', $html, $matches);
-        return $matches[1] ?? 0;
-    }
 }
