@@ -6,8 +6,10 @@
         
         <!-- Filter Form -->
         <div class="bg-white p-4 rounded-lg shadow-md mb-6">
-            <form method="GET" action="{{ route('list') }}" class="flex flex-wrap gap-4">
-
+            @php
+                $formAction = request()->is('good-wallet*') ? route('good.wallet') : route('list');
+            @endphp
+            <form method="GET" action="{{ $formAction }}" class="flex flex-wrap gap-4">
                 <div class="w-full md:w-48">
                   <label class="block text-sm font-medium text-gray-700 mb-1">Minimum Winrate</label>
                   <div class="relative rounded-md shadow-sm">
@@ -22,7 +24,7 @@
                 <div class="w-full md:w-48">
                   <label class="block text-sm font-medium text-gray-700 mb-1">Minimum ROI</label>
                   <div class="relative rounded-md shadow-sm">
-                      <input  type="number"  name="roi_min"  value="{{ request('roi_min') }}" placeholder="0%" step="0.01" min="0"
+                      <input  type="number" name="roi_min"  value="{{ request('roi_min') }}" placeholder="0%" step="0.01" min="0"
                           class="block w-full h-10 pl-3 pr-10 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 placeholder-gray-400 transition-all duration-200">
                       <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                           <span class="text-gray-500">%</span>
@@ -34,7 +36,7 @@
                     <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
                         Filter
                     </button>
-                    <a href="{{ route('list') }}" class="ml-2 px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
+                    <a href="{{ $formAction }}" class="ml-2 px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
                         Reset
                     </a>
                 </div>
@@ -50,7 +52,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ROI</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Win Rate</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gmgn Analyze</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pass</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
@@ -70,11 +72,14 @@
                           </div>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <div class="flex items-center goodWallet cursor-pointer" data-wallet="{{ $wallet->wallet_address }}" data-roi="{{ $wallet->roi }}" data-winrate="{{ $wallet->win_rate }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                            </svg>
-                        </div>                        
+                        <div class="flex items-center">
+                            <div class="flex items-center goodWallet cursor-pointer" data-wallet="{{ $wallet->wallet_address }}" data-roi="{{ $wallet->roi }}" data-winrate="{{ $wallet->win_rate }}">
+                                <img width="30" height="30" src="https://img.icons8.com/ios/50/thumb-up--v1.png" alt="thumb-up--v1"/>
+                            </div>   
+                            <div class="flex items-center disqualifed cursor-pointer" data-id="{{ $wallet->id }}">
+                                <img width="30" height="30" src="https://img.icons8.com/ios/50/thumbs-down.png" alt="thumbs-down"/>
+                            </div>
+                        </div>                       
                     </td>
                     </tr>
                     @empty
@@ -93,6 +98,7 @@
     </div>
     <script>
         $(document).ready(function() {
+
             // Listen for the click event on elements with the class 'goodWallet'
             $('.goodWallet').on('click', function() {
                 var walletAddress = $(this).data('wallet');
@@ -144,6 +150,36 @@
                         });
                     }
                 });
+            });
+
+            $('.disqualifed').on('click', function() {
+                var walletId = $(this).data('id');  // Get wallet ID from data-id attribute
+
+                // Confirm the action before sending
+                if (confirm('Are you sure you want to disqualify this wallet?')) {
+                    // Send an AJAX request to the backend to mark the wallet as disqualified
+                    $.ajax({
+                        url: "{{ route('disqualify.wallet') }}",
+                        method: 'POST',
+                        data: {
+                            id: walletId,
+                            _token: '{{ csrf_token() }}',  
+                        },
+                        success: function(response) {
+                            // Handle success response
+                            if (response.success) {
+                                alert('Wallet has been disqualified!');
+                                // Optionally, you can update the UI (e.g., change the icon color or hide the button)
+                                $(this).find('img').attr('src', 'https://img.icons8.com/ios/50/thumbs-down-filled.png');
+                            } else {
+                                alert('Something went wrong.');
+                            }
+                        },
+                        error: function() {
+                            alert('Error occurred while disqualifying the wallet.');
+                        }
+                    });
+                }
             });
         });
     </script>

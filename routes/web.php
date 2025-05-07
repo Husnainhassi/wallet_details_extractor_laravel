@@ -16,3 +16,5 @@ Route::get('/good-wallet', [DefaultController::class, 'goodWallet'])->name('good
 
 Route::post('/excel-import', [DefaultController::class, 'excelImport'])->name('wallet.import');
 Route::post('/add-good-wallet', [DefaultController::class, 'addGoodWallet'])->name('add.good.wallet');
+
+Route::post('/disqualify-wallet', [DefaultController::class, 'disqualify'])->name('disqualify.wallet');

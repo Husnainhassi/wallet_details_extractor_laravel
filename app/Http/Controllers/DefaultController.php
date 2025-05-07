@@ -16,7 +16,6 @@ class DefaultController extends Controller
     {
         $query = GoodWallet::query();
 
-        // Apply Winrate filter if provided
         if ($request->filled('winrate_min') && is_numeric($request->winrate_min)) {
             $query->where('win_rate', '>=', (float)$request->winrate_min);
         }
@@ -26,6 +25,7 @@ class DefaultController extends Controller
         }else{
             $query->where('roi', '>=', 0);
         }
+        $query->where('is_disqualified', '=', 0);
 
         // dd($query->toSql(), $query->getBindings());
         // Get paginated results
@@ -50,6 +50,11 @@ class DefaultController extends Controller
         }else{
             $query->where('roi', '>=', 0);
         }
+
+        $query->where('is_disqualified', '=', 0);
+
+        $goodWallets = GoodWallet::pluck('wallet_address')->toArray();
+        $query->whereNotIn('wallet_address', $goodWallets);
 
         $wallets = $query->paginate(10);
         
@@ -91,6 +96,22 @@ class DefaultController extends Controller
         }
 
         // Return failure response if something goes wrong
+        return response()->json(['success' => false]);
+    }
+
+    public function disqualify(Request $request)
+    {
+
+        $id = $request->input('id');
+
+        $wallet = WalletData::find($id);
+
+        if ($wallet) {
+            $wallet->is_disqualified = true;
+            $wallet->save();
+            return response()->json(['success' => true]);
+        }
+
         return response()->json(['success' => false]);
     }
 }

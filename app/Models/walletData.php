@@ -20,6 +20,7 @@ class WalletData extends Model
         'wallet_address',
         'roi',
         'win_rate',
+        'is_disqualified',
         'created_at',
         'updated_at',
     ];
