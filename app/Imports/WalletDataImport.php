@@ -17,23 +17,21 @@ class WalletDataImport implements ToModel, WithHeadingRow, WithValidation
 
         $existing = WalletData::where('wallet_address', $wallet)->first();
 
-        if ($existing) {
-
-            if ($existing->roi != $roi || $existing->win_rate != $winrate) {
+        if ($roi > 20 && $winrate > 50) {
+            if ($existing && ($existing->roi != $roi || $existing->win_rate != $winrate)) {
                 $existing->update([
                     'roi' => $roi,
                     'win_rate' => $winrate,
+                    'is_disqualified' => 0,
                     'updated_at' => now(),
                 ]);
+            } else {
+                WalletData::create([
+                    'wallet_address' => $wallet,
+                    'roi' => $roi,
+                    'win_rate' => $winrate,
+                ]);
             }
-
-        } else {
-           
-            WalletData::create([
-                'wallet_address' => $wallet,
-                'roi' => $roi,
-                'win_rate' => $winrate,
-            ]);
         }
     
         return null;

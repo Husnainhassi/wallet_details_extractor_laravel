@@ -25,7 +25,6 @@ class DefaultController extends Controller
         }else{
             $query->where('roi', '>=', 0);
         }
-        $query->where('is_disqualified', '=', 0);
 
         // dd($query->toSql(), $query->getBindings());
         // Get paginated results
