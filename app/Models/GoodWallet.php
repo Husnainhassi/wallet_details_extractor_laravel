@@ -19,9 +19,6 @@ class GoodWallet extends Model
         'win_rate',
     ];
 
-    // Optionally, you can define the types for the attributes
-    protected $casts = [
-        'roi' => 'float',
-        'win_rate' => 'float',
-    ];
+    public $timestamps = false;
+
 }

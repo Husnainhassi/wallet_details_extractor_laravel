@@ -14,27 +14,26 @@ class DefaultController extends Controller
 {
     public function goodWallet(Request $request) 
     {
-        $query = WalletData::query();
+        $query = GoodWallet::query();
 
         // Apply Winrate filter if provided
         if ($request->filled('winrate_min') && is_numeric($request->winrate_min)) {
             $query->where('win_rate', '>=', (float)$request->winrate_min);
         }
 
-        // Apply ROI filter if provided
         if ($request->filled('roi_min') && is_numeric($request->roi_min)) {
             $query->where('roi', '>=', (float)$request->roi_min);
+        }else{
+            $query->where('roi', '>=', 0);
         }
 
-        // Always exclude negative ROI values
-        $query->where('roi', '>=', 0);
         // dd($query->toSql(), $query->getBindings());
         // Get paginated results
         $wallets = $query->paginate(10);
         
         return view('results', [
             'wallets' => $wallets,
-            'filter' => $request->all() // Pass all filters back to view
+            'filter' => $request->all()
         ]);
     }
 
@@ -42,25 +41,24 @@ class DefaultController extends Controller
     {
         $query = WalletData::query();
 
-        // Apply win_rate filter if provided
         if ($request->filled('winrate_min') && is_numeric($request->winrate_min)) {
             $query->where('win_rate', '>=', (float)$request->winrate_min);
         }
 
-        // Apply ROI filter if provided
         if ($request->filled('roi_min') && is_numeric($request->roi_min)) {
             $query->where('roi', '>=', (float)$request->roi_min);
+        }else{
+            $query->where('roi', '>=', 0);
         }
 
-        // Always exclude negative ROI values
-        $query->where('roi', '>=', 0);
-        // dd($query->toSql(), $query->getBindings());
-        // Get paginated results
+        $wallets = WalletData::where('roi', '>=', [15.0])->get();
+        dd($wallets);
+
         $wallets = $query->paginate(10);
         
         return view('results', [
             'wallets' => $wallets,
-            'filter' => $request->all() // Pass all filters back to view
+            'filter' => $request->all() 
         ]);
     }
 

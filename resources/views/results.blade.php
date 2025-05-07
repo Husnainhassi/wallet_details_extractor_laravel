@@ -111,13 +111,13 @@
                     if (result.isConfirmed) {
                         // Send the data to the server using AJAX
                         $.ajax({
-                            url: {{ route('add.good.wallet') }}"
+                            url: "{{ route('add.good.wallet') }}",
                             type: 'POST',
                             data: {
                                 wallet_address: walletAddress,
                                 roi: roi,
                                 win_rate: winRate,
-                                _token: '{{ csrf_token() }}'  // CSRF token for security
+                                _token: '{{ csrf_token() }}'  
                             },
                             success: function(response) {
                                 if (response.success) {

@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('wallet_data', function (Blueprint $table) {
             $table->id(); // Auto-incrementing primary key
             $table->string('wallet_address')->unique();
-            $table->string('roi')->nullable();
-            $table->string('win_rate')->nullable();
+            $table->float('roi')->nullable();
+            $table->float('win_rate')->nullable();
             $table->timestamp('created_at')->useCurrent(); 
             $table->timestamp('updated_at')->nullable();   
         });
