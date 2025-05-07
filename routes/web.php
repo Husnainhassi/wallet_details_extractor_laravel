@@ -13,8 +13,9 @@ Route::get('/list', [DefaultController::class, 'list'])->name('list');
 Route::get('/excel-import-form', [DefaultController::class, 'excelImportForm'])->name('excel.import.form');
 Route::get('/good-wallet', [DefaultController::class, 'goodWallet'])->name('good.wallet');
 
-
+// add or update routes
 Route::post('/excel-import', [DefaultController::class, 'excelImport'])->name('wallet.import');
 Route::post('/add-good-wallet', [DefaultController::class, 'addGoodWallet'])->name('add.good.wallet');
 
+// delete routes
 Route::post('/disqualify-wallet', [DefaultController::class, 'disqualify'])->name('disqualify.wallet');
