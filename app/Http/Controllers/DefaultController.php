@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Imports\WalletsImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Models\GoodWallet;
 use App\Imports\WalletDataImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\WalletData;
@@ -82,4 +83,19 @@ class DefaultController extends Controller
         return view('import-excel');
     }
 
+    public function addGoodWallet(Request $request)
+    {
+        $wallet = new GoodWallet();
+        $wallet->wallet_address = $request->wallet_address;
+        $wallet->roi = $request->roi;
+        $wallet->win_rate = $request->win_rate;
+
+        // Try to save the wallet to the database
+        if ($wallet->save()) {
+            return response()->json(['success' => true]);
+        }
+
+        // Return failure response if something goes wrong
+        return response()->json(['success' => false]);
+    }
 }

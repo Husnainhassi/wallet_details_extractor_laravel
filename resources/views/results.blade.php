@@ -91,4 +91,61 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            // Listen for the click event on elements with the class 'goodWallet'
+            $('.goodWallet').on('click', function() {
+                var walletAddress = $(this).data('wallet');
+                var roi = $(this).data('roi');
+                var winRate = $(this).data('winrate');
+                
+                // Show SweetAlert confirmation dialog
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You want to add this wallet to the Good Wallets list.",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, add it!',
+                    cancelButtonText: 'Cancel',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Send the data to the server using AJAX
+                        $.ajax({
+                            url: {{ route('add.good.wallet') }}"
+                            type: 'POST',
+                            data: {
+                                wallet_address: walletAddress,
+                                roi: roi,
+                                win_rate: winRate,
+                                _token: '{{ csrf_token() }}'  // CSRF token for security
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire(
+                                        'Added!',
+                                        'The wallet has been added to the Good Wallet list.',
+                                        'success'
+                                    );
+                                } else {
+                                    Swal.fire(
+                                        'Error!',
+                                        'Something went wrong. Please try again later.',
+                                        'error'
+                                    );
+                                }
+                            },
+                            error: function() {
+                                Swal.fire(
+                                    'Error!',
+                                    'An error occurred while processing your request.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 @endsection
