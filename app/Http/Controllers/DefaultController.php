@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Imports\WalletsImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Imports\WalletDataImport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Models\WalletData;
 
@@ -39,7 +40,21 @@ class DefaultController extends Controller
 
     public function excelImport(Request $request) 
     {
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls,csv'
+        ]);
 
+        try {
+            Excel::import(new WalletDataImport, $request->file('excel_file'));
+            return back()->with('success', 'Wallet data imported successfully!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Error importing file: ' . $e->getMessage());
+        }
+    }
+
+    public function showImportForm()
+    {
+        return view('import-excel');
     }
 
 }

@@ -18,10 +18,12 @@ class WalletData extends Model
 
     protected $fillable = [
         'wallet_address',
-        'ROI',
-        'Winrate'
+        'roi',
+        'win_rate',
+        'created_at',
+        'updated_at',
     ];
-   /**
+    /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
