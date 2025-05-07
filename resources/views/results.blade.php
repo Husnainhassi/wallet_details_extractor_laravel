@@ -57,8 +57,8 @@
                     @forelse ($wallets as $wallet)
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $wallet->wallet_address }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ number_format($wallet->ROI, 2) }}%</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ number_format($wallet->Winrate, 2) }}%</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ number_format($wallet->roi, 2) }}%</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ number_format($wallet->win_rate, 2) }}%</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           <div class="flex items-center">
                               <a href="https://gmgn.ai/sol/address/{{ $wallet->wallet_address }}"  target="_blank"  rel="noopener noreferrer" class="text-gray-400 hover:text-blue-500"
@@ -70,7 +70,7 @@
                           </div>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        <div class="flex items-center goodWallet" data-wallet="{{ $wallet->wallet_address }}" data-roi="{{ $wallet->ROI }}" data-winrate="{{ $wallet->Winrate }}">
+                        <div class="flex items-center goodWallet" data-wallet="{{ $wallet->wallet_address }}" data-roi="{{ $wallet->roi }}" data-winrate="{{ $wallet->win_rate }}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                             </svg>

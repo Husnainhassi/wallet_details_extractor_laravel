@@ -17,16 +17,16 @@ class DefaultController extends Controller
 
         // Apply Winrate filter if provided
         if ($request->filled('winrate_min') && is_numeric($request->winrate_min)) {
-            $query->where('Winrate', '>=', (float)$request->winrate_min);
+            $query->where('win_rate', '>=', (float)$request->winrate_min);
         }
 
         // Apply ROI filter if provided
         if ($request->filled('roi_min') && is_numeric($request->roi_min)) {
-            $query->where('ROI', '>=', (float)$request->roi_min);
+            $query->where('roi', '>=', (float)$request->roi_min);
         }
 
         // Always exclude negative ROI values
-        $query->where('ROI', '>=', 0);
+        $query->where('roi', '>=', 0);
         // dd($query->toSql(), $query->getBindings());
         // Get paginated results
         $wallets = $query->paginate(10);
@@ -41,18 +41,18 @@ class DefaultController extends Controller
     {
         $query = WalletData::query();
 
-        // Apply Winrate filter if provided
+        // Apply win_rate filter if provided
         if ($request->filled('winrate_min') && is_numeric($request->winrate_min)) {
-            $query->where('Winrate', '>=', (float)$request->winrate_min);
+            $query->where('win_rate', '>=', (float)$request->winrate_min);
         }
 
         // Apply ROI filter if provided
         if ($request->filled('roi_min') && is_numeric($request->roi_min)) {
-            $query->where('ROI', '>=', (float)$request->roi_min);
+            $query->where('roi', '>=', (float)$request->roi_min);
         }
 
         // Always exclude negative ROI values
-        $query->where('ROI', '>=', 0);
+        $query->where('roi', '>=', 0);
         // dd($query->toSql(), $query->getBindings());
         // Get paginated results
         $wallets = $query->paginate(10);
