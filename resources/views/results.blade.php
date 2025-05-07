@@ -98,8 +98,7 @@
     </div>
     <script>
         $(document).ready(function() {
-
-            // Listen for the click event on elements with the class 'goodWallet'
+            
             $('.goodWallet').on('click', function() {
                 var walletAddress = $(this).data('wallet');
                 var roi = $(this).data('roi');
@@ -115,7 +114,6 @@
                     reverseButtons: true
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        // Send the data to the server using AJAX
                         $.ajax({
                             url: "{{ route('add.good.wallet') }}",
                             type: 'POST',
@@ -127,11 +125,7 @@
                             },
                             success: function(response) {
                                 if (response.success) {
-                                    Swal.fire(
-                                        'Added!',
-                                        'The wallet has been added to the Good Wallet list.',
-                                        'success'
-                                    );
+                                    location.reload();
                                 } else {
                                     Swal.fire(
                                         'Error!',
@@ -169,7 +163,7 @@
                             // Handle success response
                             if (response.success) {
                                 alert('Wallet has been disqualified!');
-                                // Optionally, you can update the UI (e.g., change the icon color or hide the button)
+                                location.reload();
                                 $(this).find('img').attr('src', 'https://img.icons8.com/ios/50/thumbs-down-filled.png');
                             } else {
                                 alert('Something went wrong.');

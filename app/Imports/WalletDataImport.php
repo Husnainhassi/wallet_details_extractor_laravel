@@ -18,11 +18,12 @@ class WalletDataImport implements ToModel, WithHeadingRow, WithValidation
         $existing = WalletData::where('wallet_address', $wallet)->first();
 
         if ($roi > 20 && $winrate > 50) {
-            if ($existing && ($existing->roi != $roi || $existing->win_rate != $winrate)) {
+            // dd($existing,$roi,$winrate);
+            if ($existing) {
                 $existing->update([
                     'roi' => $roi,
                     'win_rate' => $winrate,
-                    'is_disqualified' => 0,
+                    // 'is_disqualified' => 0,
                     'updated_at' => now(),
                 ]);
             } else {
