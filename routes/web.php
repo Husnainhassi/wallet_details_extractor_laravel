@@ -10,5 +10,6 @@ Route::get('/', function () {
 });
 
 Route::get('/list', [DefaultController::class, 'list'])->name('list');
-Route::get('/excel-import', [DefaultController::class, 'showImportForm'])->name('wallet.import.form');
+Route::get('/excel-import-form', [DefaultController::class, 'excelImportForm'])->name('excel.import.form');
+Route::get('/good-wallet', [DefaultController::class, 'goodWallet'])->name('good.wallet');
 Route::post('/excel-import', [DefaultController::class, 'excelImport'])->name('wallet.import');

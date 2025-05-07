@@ -1,12 +1,6 @@
-<!doctype html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>Import Wallet Data</title>
-</head>
-<body class="bg-gray-100">
+@extends('layouts.app')
+@section('title', 'Import Wallet Data')
+@section('content')
     <div class="container mx-auto px-4 py-8">
         <div class="max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
             <h1 class="text-2xl font-bold text-gray-800 mb-6">Import Wallet Data</h1>
@@ -58,5 +52,4 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+@endsection

@@ -11,7 +11,32 @@ use App\Models\WalletData;
 
 class DefaultController extends Controller
 {
-   
+    public function goodWallet(Request $request) 
+    {
+        $query = WalletData::query();
+
+        // Apply Winrate filter if provided
+        if ($request->filled('winrate_min') && is_numeric($request->winrate_min)) {
+            $query->where('Winrate', '>=', (float)$request->winrate_min);
+        }
+
+        // Apply ROI filter if provided
+        if ($request->filled('roi_min') && is_numeric($request->roi_min)) {
+            $query->where('ROI', '>=', (float)$request->roi_min);
+        }
+
+        // Always exclude negative ROI values
+        $query->where('ROI', '>=', 0);
+        // dd($query->toSql(), $query->getBindings());
+        // Get paginated results
+        $wallets = $query->paginate(10);
+        
+        return view('results', [
+            'wallets' => $wallets,
+            'filter' => $request->all() // Pass all filters back to view
+        ]);
+    }
+
     public function list(Request $request) 
     {
         $query = WalletData::query();
@@ -52,7 +77,7 @@ class DefaultController extends Controller
         }
     }
 
-    public function showImportForm()
+    public function excelImportForm()
     {
         return view('import-excel');
     }

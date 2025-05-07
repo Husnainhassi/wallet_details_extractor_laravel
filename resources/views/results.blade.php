@@ -1,12 +1,6 @@
-<!doctype html>
-<html>
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>Qualified Wallets</title>
-</head>
-<body class="bg-gray-100">
+@extends('layouts.app')
+@section('title', 'Import Wallet Data')
+@section('content')
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-2xl font-bold mb-6">Qualified Wallets</h1>
         
@@ -89,5 +83,4 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+@endsection
