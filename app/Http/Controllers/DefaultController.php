@@ -51,9 +51,6 @@ class DefaultController extends Controller
             $query->where('roi', '>=', 0);
         }
 
-        $wallets = WalletData::where('roi', '>=', [15.0])->get();
-        dd($wallets);
-
         $wallets = $query->paginate(10);
         
         return view('results', [
