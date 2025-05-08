@@ -46,11 +46,24 @@ class DefaultController extends Controller
 
         if ($request->filled('roi_min') && is_numeric($request->roi_min)) {
             $query->where('roi', '>=', (float)$request->roi_min);
-        }else{
-            $query->where('roi', '>=', 0);
         }
 
-        $query->where('is_disqualified', '=', 0);
+        if ($request->has('status')) {
+            switch ($request->get('status')) {
+                case 'in-review':
+                    $query->where('in_review', '=', '1');
+                    break;
+                case 'disqualified':
+                    $query->where('is_disqualified', '1');
+                    break;
+                default:
+                    $query->where('is_disqualified', 0);
+                    break;
+            }
+            
+        } else {
+            $query->where('is_disqualified', 0);
+        }
 
         $goodWallets = GoodWallet::pluck('wallet_address')->toArray();
         $query->whereNotIn('wallet_address', $goodWallets);
@@ -98,6 +111,30 @@ class DefaultController extends Controller
         return response()->json(['success' => false]);
     }
 
+    public function updateWalletStatus(Request $request)
+    {
+
+        $id = $request->input('id');
+        $status = $request->input('status');
+
+        $wallet = WalletData::find($id);
+        if (!$wallet) {
+            return response()->json(['success' => false]);
+        }
+
+        switch ($status) {
+            case 'in-review':
+                $wallet->in_review = '1';
+                break;
+            default:
+                $wallet->in_review = '0';
+                break;
+        }
+
+        $wallet->save();
+        return response()->json(['success' => true]);
+    }
+    
     public function disqualify(Request $request)
     {
 
