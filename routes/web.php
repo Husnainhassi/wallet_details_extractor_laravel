@@ -16,6 +16,7 @@ Route::get('/good-wallet', [DefaultController::class, 'goodWallet'])->name('good
 // add or update routes
 Route::post('/excel-import', [DefaultController::class, 'excelImport'])->name('wallet.import');
 Route::post('/add-good-wallet', [DefaultController::class, 'addGoodWallet'])->name('add.good.wallet');
+Route::post('/update-wallet-status', [DefaultController::class, 'updateWalletStatus'])->name('update.wallet.status');
 
 // delete routes
 Route::post('/disqualify-wallet', [DefaultController::class, 'disqualify'])->name('disqualify.wallet');
