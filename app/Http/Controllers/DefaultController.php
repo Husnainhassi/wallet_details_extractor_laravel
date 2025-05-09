@@ -62,7 +62,7 @@ class DefaultController extends Controller
             }
         } else {
             $query->where('is_disqualified', 0);
-            $query->where('in_review', 0);
+             $query->where('in_review', '=', '0');
         }
 
         $goodWallets = GoodWallet::pluck('wallet_address')->toArray();
