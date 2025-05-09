@@ -21,7 +21,6 @@ class WalletData extends Model
         'roi',
         'win_rate',
         'is_disqualified',
-        'in_review',
         'created_at',
         'updated_at',
     ];
