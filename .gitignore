@@ -2,7 +2,10 @@
 /node_modules
 /public/build
 /public/hot
+public/.htaccess
 /public/storage
+/public/error_log
+error_log
 /storage/*.key
 /storage/pail
 /vendor
@@ -21,3 +24,5 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+.htaccess
+.well-known
