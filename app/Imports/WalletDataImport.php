@@ -15,7 +15,7 @@ class WalletDataImport implements ToModel, WithHeadingRow, WithValidation
         $winrate = $this->cleanNumericValue($row['winrate'] ?? $row['Winrate'] ?? 0);
         $wallet = $row['trader'] ?? $row['wallet_address'];
 
-        $existing = WalletData::where('wallet_address', $wallet)->first();
+        $existing = WalletData::where('wallet_address', $wallet)->first(); 
 
         if ($roi > 20 && $winrate > 50) {
             // dd($existing,$roi,$winrate);
